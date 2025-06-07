@@ -9,6 +9,9 @@ import Home from './page/Home';
 import PageLoader from './component/PageLoader'
 import SliderForm from './page/SliderForm'
 
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
+
 
 function App() {
   return (

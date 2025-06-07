@@ -72,6 +72,7 @@ import Blog from '../component/Blog';
 import Footer from '../component/Footer';
 import Scanner from '../component/Scanner';
 import { generateAIResponse } from '../api/ai';
+import ImageGeneratorSection from '../component/ImageGenerater';
 
 
 const Home = () => {
@@ -90,7 +91,7 @@ const Home = () => {
                 const section = document.querySelector(sectionId);
 
                 if (section) {
-                    const sectionOffset = section.offsetTop - 50; 
+                    const sectionOffset = section.offsetTop - 50;
                     const sectionHeight = section.offsetHeight;
 
                     if (scrollPosition >= sectionOffset &&
@@ -279,20 +280,7 @@ const Home = () => {
         return () => document.removeEventListener('click', handleClickOutside);
     }, []);
 
-    /*------------------------------------- Expand img Slider -------------------------------------*/
-    const imageSlider = {
-        dots: false,
-        speed: 500,
-        cssEase: 'linear',
-        autoplay: true,
-        arrows: false,
-        pauseOnHover: false,
-        pauseOnFocus: false,
-        centerMode: true,
-        centerPadding: '20%',
-        slidesToShow: 1,
-    };
-
+  
     /*------------- Create your design Section ---------------------*/
     const settings = {
         infinite: true,
@@ -365,23 +353,9 @@ const Home = () => {
 
     /*------------- Dark Light Mode ---------------------*/
     const { isDarkMode, toggleDarkMode } = useDarkMode();
-    
-    /*------------- Dark Light Mode ---------------------*/
-  const [input, setInput] = useState('');
-  const [output, setOutput] = useState('');
-  const [loading, setLoading] = useState(false);
 
-  const handleGenerate = async () => {
-    setLoading(true);
-    try {
-      const result = await generateAIResponse({ input });
-      setOutput(result.output || 'No output received');
-    } catch (err) {
-      setOutput('Error occurred');
-    } finally {
-      setLoading(false);
-    }
-  };
+ 
+
 
     return (
         <>
@@ -471,67 +445,8 @@ const Home = () => {
             </div>
             {/* <!-- ====================================== Section One ===================================== --> */}
             <section className="section-one overflow-hidden" id="explore">
-                <div className="container">
-                    <h1 className="imgGenerator ai-img-get-text fade_down">AI <span>Image Generator</span></h1>
-                    <p className="bring fade_down">Bring your ideas to life with Generate image, the text to image generator in
-                        Geralt AI. You can generate images quickly and easily, now with higher quality, more detail and improved
-                        lighting and colour.</p>
-                    <div className="inputGenerate" id="inputGenerate">
-                        <input
-                            className="img-gner"
-                            type="text"
-                            placeholder="Describe what you want to see"
-                            name="Generate"
-                            autoComplete="off"
-                            ref={inputRef}
-                        />
-                        <div className="butn-drop-down-main">
-                            <div className={`custom-dropdown ${isActive ? 'active' : ''}`}
-                                ref={dropdownRef}
-                            >
-                                <input
-                                    type="text"
-                                    id="gender"
-                                    name="gender"
-                                    autoComplete="off"
-                                    readOnly
-                                    value={input}
-                                    onChange={(e) => setInput(e.target.value)}
-                                    placeholder="No style"
-                                />
-                                <span className="dropdown-arrow">
-                                    <img src={dropdownSvg} alt="dropdown" />
-                                </span>
-                                {isActive && (
-                                    <div className="dropdown-options">
-                                        {options.map((option, index) => (
-                                            <div
-                                                key={index}
-                                                className="dropdown-option"
-                                                data-value={option}
-                                                onClick={() => handleOptionClick(option)}
-                                            >
-                                                {option}
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                            <button onClick={handleGenerate} className="generateImage"> {loading ? 'Generating...' : 'Generate a image'}</button>
-                        </div>
-                    </div>
-                    <h2 className="noInspi">No Inspiration? Try this: <Link to="#">Baby hedgehog wearing a flower crown in a
-                        garden</Link>
-                    </h2>
-                </div>
-                <div className="expand-img-main image-slider">
-                    <Slider {...imageSlider}>
-                        <img className="expand-img" src={ExpandImg} alt="expand-img" />
-                        <img className="expand-img" src={ExpandImg2} alt="expand-img2" />
-                        <img className="expand-img" src={ExpandImg3} alt="expand-img3" />
-                        <img className="expand-img" src={ExpandImg4} alt="expand-img4" />
-                    </Slider>
-                </div>
+               <ImageGeneratorSection/>
+               
             </section>
             {/* <!-- ====================================== Section Two ===================================== --> */}
             <Possibilities />
@@ -979,7 +894,7 @@ const Home = () => {
                 </div>
             </section>
             {/* <!-- ====================================== Section Nine ===================================== --> */}
-            <Scanner />
+            {/* <Scanner /> */}
             {/* <!-- ====================================== Section Ten ===================================== --> */}
             <section className="section-ten pt-0" id="faq">
                 <div className="container">
