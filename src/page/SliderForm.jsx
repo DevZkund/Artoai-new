@@ -9,11 +9,13 @@ import formSliderImg4 from '../assets/images/form-imgs/slider-img4.jpg';
 import formSliderImg5 from '../assets/images/form-imgs/slider-img5.jpg';
 import formSliderImg6 from '../assets/images/form-imgs/slider-img6.jpg';
 import formSliderImg7 from '../assets/images/form-imgs/slider-img7.jpg';
-
+import { useForm, SubmitHandler } from "react-hook-form";
 
 const Form = () => {
     const [activeForm, setActiveForm] = useState('signin');
-
+    const { register, watch, handleSubmit, formState: { errors } } = useForm();
+    const password = watch('password');
+    const onSubmit = (data) => console.log(data)
     const formSlider = {
         dots: false,
         speed: 500,
@@ -86,19 +88,39 @@ const Form = () => {
                                         </Link>
                                     </p>
                                 </form>
-                                <form id="signup-form" className={`form ${activeForm === 'signup' ? 'active' : ''}`}>
+                                <form onSubmit={handleSubmit(onSubmit)} id="signup-form" className={`form ${activeForm === 'signup' ? 'active' : ''}`}>
                                     <h2>Create Account</h2>
                                     <div className="form-group">
-                                        <input type="text" placeholder="Name" name="name" autoComplete="off" required />
+                                        <input {...register("name", { required: "Name is required" })} type="text" placeholder="Name" name="name" autoComplete="off" required />
+                                        {errors.name && <p>{errors.name.message}</p>}
                                     </div>
                                     <div className="form-group">
-                                        <input type="email" name="email" placeholder="Email" autoComplete="off" required />
+                                        <input {...register("email", { required: true })} type="email" name="email" placeholder="Email" autoComplete="off" required />
+                                        {errors.email && <p>Email is required</p>}
                                     </div>
                                     <div className="form-group">
-                                        <input type="password" placeholder="Password" name="password" required />
+                                        <input
+                                            {...register("password", {
+                                                required: "Password is required",
+                                                minLength: {
+                                                    value: 6,
+                                                    message: "Password must be at least 6 characters"
+                                                }
+                                            })}
+                                            type="password" placeholder="Password" name="password" required
+                                        />
+                                        {errors.password && <p>{errors.password.message}</p>}
                                     </div>
                                     <div className="form-group">
-                                        <input type="password" placeholder="Confirm Password" name="Cpassword" required />
+                                        <input
+                                            {...register("confirmPassword", {
+                                                required: "Please confirm your password",
+                                                validate: (value) =>
+                                                    value === password || "Passwords do not match"
+                                            })}
+                                            type="password" placeholder="Confirm Password" name="Cpassword" required
+                                        />
+                                        {errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
                                     </div>
                                     <button type="submit" className="submit-btn">Sign Up</button>
                                     <p className="form-footer"> Already have an account?
