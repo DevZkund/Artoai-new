@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
 import Logo from '../assets/images/svg/logo.svg';
@@ -9,13 +9,57 @@ import formSliderImg4 from '../assets/images/form-imgs/slider-img4.jpg';
 import formSliderImg5 from '../assets/images/form-imgs/slider-img5.jpg';
 import formSliderImg6 from '../assets/images/form-imgs/slider-img6.jpg';
 import formSliderImg7 from '../assets/images/form-imgs/slider-img7.jpg';
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import api from '../api/api';
+import { useNavigate } from 'react-router-dom';
 
 const Form = () => {
     const [activeForm, setActiveForm] = useState('signin');
-    const { register, watch, handleSubmit, formState: { errors } } = useForm();
-    const password = watch('password');
-    const onSubmit = (data) => console.log(data)
+    const navigate = useNavigate();
+
+    const {
+        register: registerSignUp,
+        watch: watchSignUp,
+        handleSubmit: handleSubmitSignUp,
+        formState: { errors: errorsSignUp },
+    } = useForm();
+
+    const {
+        register: registerSignIn,
+        handleSubmit: handleSubmitSignIn,
+        formState: { errors: errorsSignIn },
+    } = useForm();
+
+    const password = watchSignUp('password');
+
+    const onSignUp = (data) => {
+        console.log('Signup Data:', data);
+        api.post('api/auth/signup', data)
+            .then(response => {
+                console.log('Signup successful:', response.data);
+                navigate('/'); // Redirect to login page after successful signup
+                // Handle successful signup (e.g., redirect to login or show success message)
+            })
+            .catch(error => {
+                console.error('Signup error:', error);
+                // Handle error (e.g., show error message)
+            });
+    };
+
+    const onSignIn = (data) => {
+        console.log('Signin Data:', data);
+        api.post('/api/auth/login', data)
+            .then(response => {
+                console.log('Signin successful:', response.data);
+                navigate('/'); // Redirect to dashboard after successful signin
+                // Handle successful signin (e.g., redirect to dashboard or show success message)
+            })
+            .catch(error => {
+                console.error('Signin error:', error);
+                // Handle error (e.g., show error message)
+            });
+    };
+
     const formSlider = {
         dots: false,
         speed: 500,
@@ -27,108 +71,103 @@ const Form = () => {
         pauseOnFocus: false,
     };
 
-
     return (
         <div className="form-body">
-            {/* < !-- ====================================== Form Section ===================================== --> */}
             <div className="row">
-                <h1 className="d-none">hidden</h1>
                 <div className="col-xxl-8 col-xl-7 col-lg-7 col-md-6 slider-container">
                     <div className="background-img-slider-SecOne">
                         <div className="slider-section">
                             <Slider {...formSlider} className="form-slider">
-                                <img className="service-main-bg" src={formSliderImg1} alt="slider-img1" />
-                                <img className="service-main-bg" src={formSliderImg2} alt="slider-img2" />
-                                <img className="service-main-bg" src={formSliderImg3} alt="slider-img3" />
-                                <img className="service-main-bg" src={formSliderImg4} alt="slider-img4" />
-                                <img className="service-main-bg" src={formSliderImg5} alt="slider-img5" />
-                                <img className="service-main-bg" src={formSliderImg6} alt="slider-img6" />
-                                <img className="service-main-bg" src={formSliderImg7} alt="slider-img7" />
+                                {[formSliderImg1, formSliderImg2, formSliderImg3, formSliderImg4, formSliderImg5, formSliderImg6, formSliderImg7].map((img, idx) => (
+                                    <img key={idx} className="service-main-bg" src={img} alt={`slider-img${idx + 1}`} />
+                                ))}
                             </Slider>
                         </div>
                     </div>
                 </div>
+
                 <div className="col-xxl-4 col-xl-5 col-lg-5 col-md-6">
                     <div className="form-col">
                         <Link to="/" className="logo">
                             <img src={Logo} alt="logo" />
                             <p>Geralt AI</p>
                         </Link>
+
                         <div className="form-container">
                             <div className="form-toggle">
-                                <button
-                                    className={`toggle-btn ${activeForm === 'signin' ? 'active' : ''}`}
-                                    onClick={() => setActiveForm('signin')}
-                                > Sign In
-                                </button>
-                                <button
-                                    className={`toggle-btn ${activeForm === 'signup' ? 'active' : ''}`}
-                                    onClick={() => setActiveForm('signup')}
-                                > Sign Up
-                                </button>
+                                <button className={`toggle-btn ${activeForm === 'signin' ? 'active' : ''}`} onClick={() => setActiveForm('signin')}>Sign In</button>
+                                <button className={`toggle-btn ${activeForm === 'signup' ? 'active' : ''}`} onClick={() => setActiveForm('signup')}>Sign Up</button>
                             </div>
+
                             <div className="form-content">
-                                <form id="signin-form"
-                                    className={`form ${activeForm === 'signin' ? 'active' : ''}`}
-                                >
+                                {/* Sign In Form */}
+                                <form onSubmit={handleSubmitSignIn(onSignIn)} className={`form ${activeForm === 'signin' ? 'active' : ''}`}>
                                     <h2>Welcome Back</h2>
                                     <div className="form-group">
-                                        <input type="email" placeholder="Email" name="email" autoComplete="off" required />
-                                    </div>
-                                    <div className="form-group">
-                                        <input type="password" placeholder="Password" name="password" autoComplete="off"
-                                            required />
-                                    </div>
-                                    <button type="submit" className="submit-btn">Sign In</button>
-                                    <p className="form-footer">Don't have an account?
-                                        <Link to="#" className="switch-form" onClick={(e) => {
-                                            e.preventDefault();
-                                            setActiveForm('signup');
-                                        }}> Sign Up
-                                        </Link>
-                                    </p>
-                                </form>
-                                <form onSubmit={handleSubmit(onSubmit)} id="signup-form" className={`form ${activeForm === 'signup' ? 'active' : ''}`}>
-                                    <h2>Create Account</h2>
-                                    <div className="form-group">
-                                        <input {...register("name", { required: "Name is required" })} type="text" placeholder="Name" name="name" autoComplete="off" required />
-                                        {errors.name && <p>{errors.name.message}</p>}
-                                    </div>
-                                    <div className="form-group">
-                                        <input {...register("email", { required: true })} type="email" name="email" placeholder="Email" autoComplete="off" required />
-                                        {errors.email && <p>Email is required</p>}
+                                        <input
+                                            {...registerSignIn("email", { required: "Email is required" })}
+                                            type="email"
+                                            placeholder="Email"
+                                            autoComplete="off"
+                                        />
+                                        {errorsSignIn.email && <p>{errorsSignIn.email.message}</p>}
                                     </div>
                                     <div className="form-group">
                                         <input
-                                            {...register("password", {
+                                            {...registerSignIn("password", { required: "Password is required" })}
+                                            type="password"
+                                            placeholder="Password"
+                                            autoComplete="off"
+                                        />
+                                        {errorsSignIn.password && <p>{errorsSignIn.password.message}</p>}
+                                    </div>
+                                    <button type="submit" className="submit-btn">Sign In</button>
+                                    <p className="form-footer">Don't have an account?{" "}
+                                        <Link to="#" onClick={(e) => { e.preventDefault(); setActiveForm('signup'); }}>Sign Up</Link>
+                                    </p>
+                                </form>
+
+                                {/* Sign Up Form */}
+                                <form onSubmit={handleSubmitSignUp(onSignUp)} className={`form ${activeForm === 'signup' ? 'active' : ''}`}>
+                                    <h2>Create Account</h2>
+                                    <div className="form-group">
+                                        <input {...registerSignUp("name", { required: "Name is required" })} type="text" placeholder="Name" autoComplete="off" />
+                                        {errorsSignUp.name && <p>{errorsSignUp.name.message}</p>}
+                                    </div>
+                                    <div className="form-group">
+                                        <input {...registerSignUp("email", { required: "Email is required" })} type="email" placeholder="Email" autoComplete="off" />
+                                        {errorsSignUp.email && <p>{errorsSignUp.email.message}</p>}
+                                    </div>
+                                    <div className="form-group">
+                                        <input
+                                            {...registerSignUp("password", {
                                                 required: "Password is required",
                                                 minLength: {
                                                     value: 6,
                                                     message: "Password must be at least 6 characters"
                                                 }
                                             })}
-                                            type="password" placeholder="Password" name="password" required
+                                            type="password"
+                                            placeholder="Password"
+                                            autoComplete="off"
                                         />
-                                        {errors.password && <p>{errors.password.message}</p>}
+                                        {errorsSignUp.password && <p>{errorsSignUp.password.message}</p>}
                                     </div>
                                     <div className="form-group">
                                         <input
-                                            {...register("confirmPassword", {
+                                            {...registerSignUp("confirmPassword", {
                                                 required: "Please confirm your password",
-                                                validate: (value) =>
-                                                    value === password || "Passwords do not match"
+                                                validate: value => value === password || "Passwords do not match"
                                             })}
-                                            type="password" placeholder="Confirm Password" name="Cpassword" required
+                                            type="password"
+                                            placeholder="Confirm Password"
+                                            autoComplete="off"
                                         />
-                                        {errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
+                                        {errorsSignUp.confirmPassword && <p>{errorsSignUp.confirmPassword.message}</p>}
                                     </div>
                                     <button type="submit" className="submit-btn">Sign Up</button>
-                                    <p className="form-footer"> Already have an account?
-                                        <Link to="#" className="switch-form" onClick={(e) => {
-                                            e.preventDefault();
-                                            setActiveForm('signin');
-                                        }}> Sign In
-                                        </Link>
+                                    <p className="form-footer">Already have an account?{" "}
+                                        <Link to="#" onClick={(e) => { e.preventDefault(); setActiveForm('signin'); }}>Sign In</Link>
                                     </p>
                                 </form>
                             </div>
@@ -137,7 +176,7 @@ const Form = () => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Form
+export default Form;

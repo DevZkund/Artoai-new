@@ -73,6 +73,7 @@ import Footer from '../component/Footer';
 import Scanner from '../component/Scanner';
 import { generateAIResponse } from '../api/ai';
 import ImageGeneratorSection from '../component/ImageGenerater';
+import Pricing from '../component/Pricing';
 
 
 const Home = () => {
@@ -858,41 +859,7 @@ const Home = () => {
             {/* <!-- ====================================== Section Seven ===================================== --> */}
             <Marquee />
             {/* <!-- ====================================== Section Eight ===================================== --> */}
-            <section className="section-eight pt-0" id="pricing">
-                <div className="container">
-                    <h2 className="xplore fade_down">Get a plan and <span>Start Creating</span></h2>
-                    <h3 className="stunnii fade_down">Est libero volutpat morbi massa. Lorem sodales adipiscing eu maecenas lectus
-                        faucibus pharetra. Vivamus sed sit elementum eu. Venenatis euismod egestas metus enim et sed mauris lectus.
-                    </h3>
-                    <div className="row pricing-rows">
-                        <div className="col-xxl-5 col-xl-5 col-lg-6 col-md-9 zoom_in">
-                            <div className="price-box-main">
-                                <p className="freeplan">Free Plan</p>
-                                <h3 className="plan-price">$0<sub>/month</sub></h3>
-                                <Link to="#" className="price-plan-btn">Generate a image</Link>
-                                <ul className="plan-body">
-                                    <li>Generate up to 20 images daily</li>
-                                    <li>Try classNameic fast and flux fast modes</li>
-                                    <li>No access to custom characters or styles</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div className="col-xxl-5 col-xl-5 col-lg-6 col-md-9 zoom_in">
-                            <div className="price-box-main">
-                                <p className="freeplan">Paid Plan</p>
-                                <h3 className="plan-price">$9.99<sub>/month</sub></h3>
-                                <Link to="#" className="price-plan-btn paind-plan">Get A Paid Plan</Link>
-                                <ul className="plan-body">
-                                    <li>Enjoy thousands of image generations</li>
-                                    <li>Unlock all Flux and Mystic modes</li>
-                                    <li>Create custom characters or styles</li>
-                                    <li>Access advanced AI tools and features</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <Pricing/> 
             {/* <!-- ====================================== Section Nine ===================================== --> */}
             {/* <Scanner /> */}
             {/* <!-- ====================================== Section Ten ===================================== --> */}
