@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import api from '../api/api';
 import { processRazorpayPayment } from './Rozorpay';
-
+ console.log(process.env.REACT_APP_RAZORPAY_KEY,'0000')
 function Pricing() {
     // ✅ Fetch and directly return the raw array
     const fetchPlans = async () => {
@@ -48,7 +48,6 @@ function Pricing() {
                     Est libero volutpat morbi massa. Lorem sodales adipiscing eu maecenas lectus faucibus pharetra.
                     Vivamus sed sit elementum eu. Venenatis euismod egestas metus enim et sed mauris lectus.
                 </h3>
-                {/* <button onClick={handleClick}>click</button> */}
 
                 <div className="row pricing-rows">
                     {data?.map((item, index) => (
@@ -58,7 +57,7 @@ function Pricing() {
                                 <h3 className="plan-price">
                                     ₹{item.price}<sub>/{item.duration}</sub>
                                 </h3>
-                                <Link to="#" className="price-plan-btn">Choose Plan</Link>
+                                <button onClick={handleClick} className="price-plan-btn">Choose Plan</button>
                                 <ul className="plan-body">
                                     {item.features.map((feature, idx) => (
                                         <li key={idx}>{feature}</li>

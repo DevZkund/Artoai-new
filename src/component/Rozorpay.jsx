@@ -14,19 +14,20 @@ const loadRazorpayScript = () => {
     document.body.appendChild(script);
   });
 };
-console.log(process.env.REACT_APP_RAZORPAY_KEY,'0000')
+
 export const processRazorpayPayment = async (amount, currency, userEmail , userPhone) => {
+  console.log(process.env.REACT_APP_RAZORPAY_KEY,'00001')
   try {
     const response = await api.post("/api/payments/create-razorpay-order", {
       amount,
       currency,
     });
 
-    if (!response || !response.orderId) {
+    if (!response || !response.id) {
       throw new Error("Failed to create order");
     }
 
-    const orderId = response.orderId;
+    const orderId = response.id;
 
     const scriptLoaded = await loadRazorpayScript();
     if (!scriptLoaded) {
@@ -35,7 +36,7 @@ export const processRazorpayPayment = async (amount, currency, userEmail , userP
 
     return new Promise((resolve, reject) => {
       const options = {
-        key: "rzp_test_wPxf5Y1czE86jL",
+        key: process.env.REACT_APP_RAZORPAY_KEY,
         amount: amount * 100,
         currency,
         name: "Your Company",
