@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import api from '../api/api';
+import { processRazorpayPayment } from './Rozorpay';
 
 function Pricing() {
     // ✅ Fetch and directly return the raw array
@@ -19,6 +20,26 @@ function Pricing() {
     if (isLoading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
 
+    const handleClick=async()=>{
+           try {
+          const  paymentVerify = await processRazorpayPayment(
+            500,
+            "INR",
+            "anuj@infutrix.com",
+            9565868485
+          );
+          console.log("Payment successful:", paymentVerify);
+        } catch (error) {
+          if (error.message === "Payment cancelled by user") {
+            // toast.error("Payment cancelled by user.");
+            return;
+          } else {
+            console.error("Payment error:", error);
+            return;
+          }
+      }
+    }
+
     return (
         <section className="section-eight pt-0" id="pricing">
             <div className="container">
@@ -27,6 +48,7 @@ function Pricing() {
                     Est libero volutpat morbi massa. Lorem sodales adipiscing eu maecenas lectus faucibus pharetra.
                     Vivamus sed sit elementum eu. Venenatis euismod egestas metus enim et sed mauris lectus.
                 </h3>
+                {/* <button onClick={handleClick}>click</button> */}
 
                 <div className="row pricing-rows">
                     {data?.map((item, index) => (
