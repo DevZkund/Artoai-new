@@ -37,6 +37,16 @@ const Form = () => {
         api.post('api/auth/signup', data)
             .then(response => {
                 console.log('Signup successful:', response.data);
+                const userData = {
+                    isLoggedIn: true,
+                    userId: response.user.id,         // adjust based on your API response
+                    name: response.user.name,
+                    email: response.user.email,
+                    referralCode: response.user.referralCode,
+                    referredBy: response.user.referredBy
+                };
+                console.log(userData, 'referredBy')
+                localStorage.setItem("userDetail", JSON.stringify(userData));
                 navigate('/'); // Redirect to login page after successful signup
                 // Handle successful signup (e.g., redirect to login or show success message)
             })
@@ -50,7 +60,18 @@ const Form = () => {
         console.log('Signin Data:', data);
         api.post('/api/auth/login', data)
             .then(response => {
-                console.log('Signin successful:', response.data);
+                console.log('Signin successful:', response);
+                const userData = {
+                    isLoggedIn: true,
+                    userId: response.user.id,         // adjust based on your API response
+                    name: response.user.name,
+                    email: response.user.email,
+                    referralCode: response.user.referralCode,
+                    referredBy: response.user.referredBy
+                };
+                console.log(userData, 'referredBy')
+                localStorage.setItem("userDetail", JSON.stringify(userData));
+
                 navigate('/'); // Redirect to dashboard after successful signin
                 // Handle successful signin (e.g., redirect to dashboard or show success message)
             })
@@ -137,6 +158,25 @@ const Form = () => {
                                     <div className="form-group">
                                         <input {...registerSignUp("email", { required: "Email is required" })} type="email" placeholder="Email" autoComplete="off" />
                                         {errorsSignUp.email && <p>{errorsSignUp.email.message}</p>}
+                                    </div>
+                                    <div className="form-group">
+                                        <input
+                                            type="tel"
+                                            maxLength={10}
+                                            placeholder="Phone Number"
+                                            autoComplete="off"
+                                            {...registerSignUp("phone", {
+                                                required: "Phone number is required",
+                                                pattern: {
+                                                    value: /^[6-9]\d{9}$/,
+                                                    message: "Enter a valid 10-digit Indian phone number",
+                                                },
+                                            })}
+                                            onInput={(e) => {
+                                                e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                                            }}
+                                        />
+                                        {errorsSignUp.phone && <p>{errorsSignUp.phone.message}</p>}
                                     </div>
                                     <div className="form-group">
                                         <input
