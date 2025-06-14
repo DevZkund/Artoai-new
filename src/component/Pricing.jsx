@@ -24,17 +24,17 @@ console.log(user,'888')
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
-  const handleClick = async () => {
+  const handleClick = async (price) => {
     if (!user || !user.isLoggedIn ) {
       navigate('/SliderForm');
       return;
     }
     try {
       const paymentVerify = await processRazorpayPayment(
-        500,
+        price,
         "INR",
         user.email,
-        9565868485
+        user.phone
       );
       console.log("Payment successful:", paymentVerify);
     } catch (error) {
@@ -65,7 +65,7 @@ console.log(user,'888')
                 <h3 className="plan-price">
                   ₹{item.price}<sub>/{item.duration}</sub>
                 </h3>
-                <button onClick={handleClick} className="price-plan-btn">Choose Plan</button>
+                <button onClick={handleClick(item.price)} className="price-plan-btn">Choose Plan</button>
                 <ul className="plan-body">
                   {item.features.map((feature, idx) => (
                     <li key={idx}>{feature}</li>

@@ -42,6 +42,7 @@ const Form = () => {
                     userId: response.user.id,         // adjust based on your API response
                     name: response.user.name,
                     email: response.user.email,
+                    phone: response.user.phone,
                     referralCode: response.user.referralCode,
                     referredBy: response.user.referredBy
                 };
@@ -66,6 +67,7 @@ const Form = () => {
                     userId: response.user.id,         // adjust based on your API response
                     name: response.user.name,
                     email: response.user.email,
+                    phone: response.user.phone,
                     referralCode: response.user.referralCode,
                     referredBy: response.user.referredBy
                 };
