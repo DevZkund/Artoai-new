@@ -65,7 +65,7 @@ console.log(user,'888')
                 <h3 className="plan-price">
                   ₹{item.price}<sub>/{item.duration}</sub>
                 </h3>
-                <button onClick={handleClick(item.price)} className="price-plan-btn">Choose Plan</button>
+                <button onClick={()=>handleClick(item.price)} className="price-plan-btn">Choose Plan</button>
                 <ul className="plan-body">
                   {item.features.map((feature, idx) => (
                     <li key={idx}>{feature}</li>
