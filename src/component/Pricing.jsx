@@ -24,29 +24,53 @@ console.log(user,'888')
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
-  const handleClick = async (price) => {
-    if (!user || !user.isLoggedIn ) {
-      navigate('/SliderForm');
+const handleClick = async (item) => {
+  if (!user.isLoggedIn) {
+    navigate('/SliderForm');
+    return;
+  }
+
+  try {
+    const paymentVerify = await processRazorpayPayment(
+      item.price,
+      "INR",
+      user.email,
+      user.phone
+    );
+    
+    // Ensure we received a valid Razorpay response before proceeding
+    if (!paymentVerify?.razorpay_payment_id) {
+      console.error("No payment ID received.");
       return;
     }
+
+    console.log("Payment successful:", paymentVerify?.razorpay_payment_id, paymentVerify);
+
+    const payload = {
+      planId: item.id,
+      transactionId: paymentVerify.razorpay_payment_id,
+      paymentStatus: 'SUCCESS',
+    };
+
     try {
-      const paymentVerify = await processRazorpayPayment(
-        price,
-        "INR",
-        user.email,
-        user.phone
-      );
-      console.log("Payment successful:", paymentVerify);
-    } catch (error) {
-      if (error.message === "Payment cancelled by user") {
-        // toast.error("Payment cancelled by user.");
-        return;
-      } else {
-        console.error("Payment error:", error);
-        return;
-      }
+      const purchaseOrder = await api.post('api/user-plan/purchase-plan', payload);
+      console.log("Plan purchase response:", purchaseOrder.data);
+    } catch (err) {
+      console.log("Purchase plan API error:", err);
+    }
+
+  } catch (error) {
+    if (error.message === "Payment cancelled by user") {
+      // toast.error("Payment cancelled by user.");
+      return;
+    } else {
+      console.error("Payment error:", error);
+      // toast.error("Payment failed. Please try again.");
+      return;
     }
   }
+};
+
 
   return (
     <section className="section-eight pt-0" id="pricing">
@@ -65,7 +89,7 @@ console.log(user,'888')
                 <h3 className="plan-price">
                   ₹{item.price}<sub>/{item.duration}</sub>
                 </h3>
-                <button onClick={()=>handleClick(item.price)} className="price-plan-btn">Choose Plan</button>
+                <button onClick={()=>handleClick(item)} className="price-plan-btn">Choose Plan</button>
                 <ul className="plan-body">
                   {item.features.map((feature, idx) => (
                     <li key={idx}>{feature}</li>

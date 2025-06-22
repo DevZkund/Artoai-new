@@ -16,7 +16,6 @@ const loadRazorpayScript = () => {
 };
 
 export const processRazorpayPayment = async (amount, currency, userEmail , userPhone) => {
-  console.log(process.env.REACT_APP_RAZORPAY_KEY,'00001')
   try {
     const response = await api.post("/api/payments/create-razorpay-order", {
       amount,
@@ -44,8 +43,6 @@ export const processRazorpayPayment = async (amount, currency, userEmail , userP
         order_id: orderId,
         handler: async (response) => {
           try {
-            console.log("Payment Response:", response);
-
             if (!response.razorpay_payment_id || !response.razorpay_order_id || !response.razorpay_signature) {
               return reject(new Error("Invalid payment response"));
             }
@@ -55,7 +52,7 @@ export const processRazorpayPayment = async (amount, currency, userEmail , userP
               razorpay_order_id: response.razorpay_order_id,
               razorpay_signature: response.razorpay_signature,
             });
-            resolve(verifyResponse); // ✅ Verification response return ho raha hai
+            resolve(response); // ✅ Verification response return ho raha hai
           } catch (error) {
             console.error("Payment verification failed:", error);
             reject(error);
